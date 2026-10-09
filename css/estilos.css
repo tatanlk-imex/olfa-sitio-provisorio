@@ -296,3 +296,6 @@ details .resp{padding:0 18px 16px;color:var(--gris-8)}
 .video-ayuda{font-size:.82rem;color:var(--amarillo);font-weight:700}
 .video-marco{aspect-ratio:16/9;border-radius:var(--radio);overflow:hidden;background:#000}
 .video-marco iframe{width:100%;height:100%;border:0;display:block}
+
+/* Etiqueta de más vendido */
+.tag-top{background:#000;color:var(--amarillo)}
