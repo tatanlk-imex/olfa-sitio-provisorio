@@ -49,9 +49,9 @@
       var s = {
         c1: ["los cuchillos de seguridad auto-retráctiles SK-4, SK-5 y SK-9, cuya hoja se retrae al soltar el material", "cuchillos-de-seguridad/"],
         c2: ["los cuchillos de máxima seguridad SK-10, SK-15 (desechable) y SK-16, diseñados para film y zunchos", "cuchillos-de-seguridad/"],
-        c3: ["el cuchillo tipo pinza PK-1 (abre bolsas y paquetes sin dañar el contenido) y el SK-10", "cuchillos-de-seguridad/"],
+        c3: ["el SK-10 (corta cintas de embalaje y films sin dañar el contenido) y el SK-9, que además corta cinta", "cuchillos-de-seguridad/"],
         c4: ["el SK-16, que según su ficha corta film, zunchos, caucho y cajas, y la línea de cuchillos industriales", "cuchillos-de-seguridad/"],
-        c5: ["el SK-12 (acero inoxidable, detectable por detectores de metales y con certificado NSF según su ficha) y el SK-15/L (NSF)", "cuchillos-de-seguridad/"],
+        c5: ["la pinza PK-1 (abre bolsas y paquetes sin dañar el contenido, pensada para la industria alimentaria), el SK-12 (acero inoxidable, detectable por detectores de metales y con certificado NSF según su ficha) y el SK-15/L (NSF)", "cuchillos-de-seguridad/"],
         c6: ["nuestra línea de cuchillos de seguridad; un ejecutivo te ayuda a elegir el modelo por tarea", "cuchillos-de-seguridad/"]
       }[c.c] || ["nuestra línea de cuchillos de seguridad", "cuchillos-de-seguridad/"];
       return { txt: "Por lo que cuentas, te orientaría hacia " + s[0] + ".", ruta: s[1], etiqueta: "Ver cuchillos de seguridad" };
@@ -135,12 +135,12 @@
     lab.innerHTML = '<input type="checkbox"> <span>Acepto que Imex use estos datos para responder mi solicitud (<a href="' + RAIZ + 'politica-de-privacidad/">política de privacidad</a>).</span>';
     ctl.appendChild(lab); var chk = lab.querySelector("input");
     function exigir() { if (!chk.checked) { burbuja("Para enviar necesito que aceptes el uso de tus datos.", "bot"); chk.focus(); return false; } return true; }
-    if (C.WHATSAPP) {
+    if (C.WHATSAPP && C.ASISTENTE_WHATSAPP) {
       var w = document.createElement("a"); w.className = "btn btn-wsp asesor-enviar"; w.href = "#"; w.innerHTML = '<span>Enviar por WhatsApp</span>';
       w.addEventListener("click", function (e) { e.preventDefault(); if (!exigir()) { return; } evento("asistente_whatsapp", { tema: estado.tema }); window.open("https://wa.me/" + C.WHATSAPP + "?text=" + encodeURIComponent(textoResumen()), "_blank", "noopener"); fin(); });
       ctl.appendChild(w);
     }
-    var m = document.createElement("button"); m.type = "button"; m.className = "btn btn-sec asesor-enviar"; m.textContent = C.FORM_ENDPOINT ? "Enviar solicitud" : "Enviar por correo";
+    var m = document.createElement("button"); m.type = "button"; m.className = "btn btn-sec asesor-enviar"; m.textContent = C.FORM_ENDPOINT ? "Enviar solicitud" : "Abrir mi correo con la consulta";
     m.addEventListener("click", function () { if (!exigir()) { return; } evento("asistente_correo", { tema: estado.tema }); enviarCorreo(); });
     ctl.appendChild(m);
   }
@@ -153,7 +153,8 @@
         .catch(function () { burbuja("No pudimos enviar la solicitud. Escríbenos a " + C.CORREO_COTIZACIONES + " o llama al " + TEL + ".", "bot"); });
     } else {
       window.location.href = "mailto:" + C.CORREO_COTIZACIONES + "?subject=" + encodeURIComponent("Cotización web OLFA (asistente): " + (INTERES[estado.tema] || "consulta")) + "&body=" + encodeURIComponent(textoResumen());
-      ctl.innerHTML = ""; fin();
+      ctl.innerHTML = "";
+      burbuja("Se abrió tu programa de correo con la consulta lista. No se envía nada hasta que presiones Enviar. Si no se abrió, escríbenos a " + C.CORREO_COTIZACIONES + " o llama al " + TEL + ".", "bot");
     }
   }
   function abrir() {

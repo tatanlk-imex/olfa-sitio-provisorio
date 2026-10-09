@@ -19,6 +19,12 @@
     document.querySelectorAll("[data-whatsapp]").forEach(function (a) {
       var texto = a.getAttribute("data-whatsapp") || "Hola, quiero cotizar productos OLFA.";
       a.href = "https://wa.me/" + C.WHATSAPP + "?text=" + encodeURIComponent(texto);
+      if (a.hasAttribute("data-wsp-num")) {
+        var n = String(C.WHATSAPP);
+        a.textContent = "+" + n.slice(0, 2) + " " + n.slice(2, 3) + " " + n.slice(3, 7) + " " + n.slice(7);
+        var fila = a.closest("[data-wsp-fila]");
+        if (fila) { fila.hidden = false; }
+      }
       a.hidden = false;
     });
   }
@@ -76,6 +82,25 @@
     });
   }
 
+  // Videos de YouTube: no se carga nada de YouTube hasta que la persona hace clic (sin JavaScript queda el enlace al video)
+  document.querySelectorAll(".video-lite[data-yt]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      var id = a.getAttribute("data-yt");
+      var cont = document.createElement("div");
+      cont.className = "video-marco";
+      var f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&rel=0";
+      f.title = a.querySelector(".video-tit") ? a.querySelector(".video-tit").textContent : "Video OLFA";
+      f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      f.allowFullscreen = true;
+      f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      cont.appendChild(f);
+      a.parentNode.replaceChild(cont, a);
+      evento("ver_video", { video: id });
+    });
+  });
+
   // Galería de producto
   var principal = document.querySelector(".galeria .principal img");
   document.querySelectorAll(".galeria .miniaturas button").forEach(function (b) {
@@ -127,6 +152,35 @@
       if (chip) { chip.click(); }
     }
     aplicar();
+  }
+
+  // Buscador de puntos de venta (solo existe si la página trae el listado)
+  var loc = document.getElementById("locales");
+  if (loc) {
+    var lt = Array.prototype.slice.call(loc.querySelectorAll("[data-region]"));
+    var lc = document.getElementById("loc-contador"), lx = document.getElementById("loc-texto"), lr = document.getElementById("loc-region"), lv = document.getElementById("loc-vacio");
+    var lchips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-tipo-filtro]"));
+    var lcom = document.getElementById("loc-comuna");
+    var le = { tipo: "todos", q: "", region: "", comuna: "" };
+    var normL = function (t) { return (t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); };
+    var aplicarL = function () {
+      var n = 0;
+      lt.forEach(function (t) {
+        var ok = (le.tipo === "todos" || t.getAttribute("data-tipo") === le.tipo) && (!le.region || t.getAttribute("data-region") === le.region) && (!le.comuna || t.getAttribute("data-comuna") === le.comuna) &&
+          (!le.q || normL(t.getAttribute("data-busqueda")).indexOf(normL(le.q)) > -1);
+        t.hidden = !ok; if (ok) { n++; }
+      });
+      if (lc) { lc.textContent = n + (n === 1 ? " local" : " locales"); }
+      if (lv) { lv.hidden = n !== 0; }
+    };
+    lchips.forEach(function (c) { c.addEventListener("click", function () { lchips.forEach(function (x) { x.setAttribute("aria-pressed", "false"); }); c.setAttribute("aria-pressed", "true"); le.tipo = c.getAttribute("data-tipo-filtro"); aplicarL(); }); });
+    if (lx) { lx.addEventListener("input", function () { le.q = lx.value; aplicarL(); }); }
+    if (lr) { lr.addEventListener("change", function () {
+      le.region = lr.value; le.comuna = "";
+      if (lcom) { lcom.value = ""; Array.prototype.forEach.call(lcom.options, function (o) { o.hidden = !!(o.value && le.region && o.getAttribute("data-region") !== le.region); }); }
+      aplicarL(); }); }
+    if (lcom) { lcom.addEventListener("change", function () { le.comuna = lcom.value; aplicarL(); }); }
+    aplicarL();
   }
 
   // Formulario de cotización
