@@ -97,7 +97,7 @@
       f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
       cont.appendChild(f);
       a.parentNode.replaceChild(cont, a);
-      evento("ver_video", { video: id });
+      evento("video_visto", { video_id: id });
     });
   });
 
