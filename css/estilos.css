@@ -350,9 +350,10 @@ table.ficha th,table.ficha td{padding:10px 14px;border-bottom:1px solid var(--gr
 .tarjeta-sector:hover{transform:none}
 
 /* Carrusel del home */
-.carrusel{position:relative;background:#000}
+.carrusel-fondo{background:#000}
+.carrusel{position:relative;background:#000;max-width:1600px;margin:0 auto}
 .carrusel .slide a,.carrusel .slide picture{display:block}
-.carrusel img{width:100%;height:auto;display:block;max-height:560px;object-fit:cover}
+.carrusel img{width:100%;height:auto;display:block}
 .carrusel-ctl{position:absolute;right:14px;bottom:14px;display:flex;gap:8px}
 .carrusel-ctl button{width:44px;height:44px;border-radius:50%;border:2px solid #000;background:var(--amarillo);color:#000;font-size:1.3rem;font-weight:800;cursor:pointer}
 .carrusel-ctl button:hover{background:#fff}
