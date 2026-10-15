@@ -101,6 +101,27 @@
     });
   });
 
+  // Carrusel del home: rota solo si la persona no pidió menos movimiento; se pausa con el mouse, el foco o el botón
+  var car = document.querySelector(".carrusel");
+  if (car) {
+    var slides = Array.prototype.slice.call(car.querySelectorAll(".slide")), ctl = car.querySelector(".carrusel-ctl"), actual = 0, pausado = false, tm = null;
+    slides.forEach(function (s) { var im = s.querySelector("img"); if (im) { im.loading = "eager"; } });
+    var mostrar = function (i) { actual = (i + slides.length) % slides.length; slides.forEach(function (s, k) { s.hidden = k !== actual; }); };
+    var siguiente = function () { mostrar(actual + 1); };
+    var arrancar = function () { if (tm) { clearInterval(tm); } if (!pausado && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) { tm = setInterval(siguiente, 6000); } };
+    if (ctl && slides.length > 1) {
+      ctl.hidden = false;
+      ctl.querySelector("[data-prev]").addEventListener("click", function () { mostrar(actual - 1); arrancar(); });
+      ctl.querySelector("[data-sig]").addEventListener("click", function () { siguiente(); arrancar(); });
+      var bp = ctl.querySelector("[data-pausa]");
+      bp.addEventListener("click", function () { pausado = !pausado; bp.setAttribute("aria-pressed", pausado ? "true" : "false"); bp.textContent = pausado ? "▶" : "❚❚"; bp.setAttribute("aria-label", pausado ? "Reanudar" : "Pausar"); arrancar(); });
+      car.addEventListener("mouseenter", function () { if (tm) { clearInterval(tm); } });
+      car.addEventListener("mouseleave", arrancar);
+      car.addEventListener("focusin", function () { if (tm) { clearInterval(tm); } });
+      arrancar();
+    }
+  }
+
   // Galería de producto
   var principal = document.querySelector(".galeria .principal img");
   document.querySelectorAll(".galeria .miniaturas button").forEach(function (b) {
@@ -203,7 +224,8 @@
       Array.prototype.forEach.call(form.elements, function (el) { if (el.name && el.type !== "checkbox") { d[el.name] = el.value; } });
       d.pagina = window.location.href;
       evento("enviar_cotizacion", { interes: d.interes });
-      var asunto = "Cotización web OLFA: " + (d.producto || d.interes || "consulta");
+      var pref = { visita: "Solicitud de visita o muestras OLFA: ", distribuidor: "Distribuidor OLFA: ", club: "Club OLFA Prevención: " }[d.interes] || "Cotización web OLFA: ";
+      var asunto = pref + (d.producto || d.interes || "consulta");
       var cuerpo = "Nombre: " + d.nombre + "\nEmpresa: " + (d.empresa || "-") + "\nRubro: " + (d.rubro || "-") + "\nCorreo: " + d.correo + "\nTeléfono: " + (d.telefono || "-") +
         "\nInterés: " + d.interes + "\nProducto: " + (d.producto || "-") + "\nTipo de cliente: " + (d.tipo || "-") + "\nCantidad: " + (d.cantidad || "-") + "\n\nMensaje:\n" + (d.mensaje || "-") + "\n\nEnviado desde: " + d.pagina;
       if (C.FORM_ENDPOINT) {

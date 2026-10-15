@@ -285,7 +285,41 @@ details .resp{padding:0 18px 16px;color:var(--gris-8)}
   .jerarquia li{grid-template-columns:36px 1fr}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-@media print{.cabecera,.barra-info,.barra-aviso,.barra-movil,.pie,.asesor-btn,.wsp-flotante{display:none}}
+@media print{.cabecera,.barra-info,.barra-aviso,.barra-movil,.pie,.asesor-btn,.wsp-flotante,.caja-cotizar,.no-imprimir,.migas,.seccion-gris,.video-lite,.videos{display:none!important}}
+
+/* ---- ronda de comentarios (Nicolás Pino): visita, novedades, herramientas, ficha técnica */
+.enlace-distribuidor{background:var(--amarillo);color:#000!important;font-weight:800;border-radius:999px;padding:2px 12px;text-decoration:none;white-space:nowrap}
+.enlace-distribuidor:hover{background:#fff}
+.nav-principal .cta-nav-sec{background:var(--amarillo);color:#000;margin-left:6px}
+.nav-principal .cta-nav-sec:hover{background:#fff;color:#000}
+.franja-visita{background:var(--amarillo);color:#000}
+.franja-visita .contenedor{display:flex;gap:12px 18px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-top:16px;padding-bottom:16px}
+.franja-visita .contenedor>div{flex:1 1 320px;font-size:1.05rem}
+.franja-visita .btn-linea-blanca{color:#000;border-color:#000}
+.franja-visita .btn-linea-blanca:hover{background:rgba(0,0,0,.1);color:#000}
+.novedades-envoltorio{position:relative}
+.novedades{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;scrollbar-width:thin}
+.novedad{flex:0 0 min(320px,82%);scroll-snap-align:start;background:#fff;border:1px solid var(--gris-2);border-top:5px solid var(--amarillo);border-radius:var(--radio);padding:20px}
+.novedad h3{font-size:1.15rem}
+.novedades-ctl{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.novedades-ctl button{width:44px;height:44px;border-radius:50%;border:2px solid #000;background:var(--amarillo);color:#000;font-size:1.3rem;font-weight:800;cursor:pointer}
+.novedades-ctl button:hover{background:#fff}
+.herramienta{background:#fff;border:1px solid var(--gris-2);border-radius:var(--radio);padding:22px}
+.herramienta label{display:block;font-weight:600;margin:10px 0 6px}
+.herramienta input,.herramienta select{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--gris-4);border-radius:10px;background:#fff;min-height:48px}
+.herramienta .caja{margin-top:14px;padding:16px}
+.herramienta .caja h4{margin:0 0 6px}
+.fila-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.lista-pasos{padding-left:1.2em;margin:0}
+.lista-pasos li{margin-bottom:8px}
+.material[hidden],#sim-vacio[hidden]{display:none}
+.material{margin-top:28px}
+.ficha-tecnica{margin:34px 0}
+table.ficha{width:100%;border-collapse:collapse}
+table.ficha th{width:30%;text-align:left;background:var(--gris-1);font-weight:700;vertical-align:top}
+table.ficha th,table.ficha td{padding:10px 14px;border-bottom:1px solid var(--gris-2)}
+@media (max-width:760px){.fila-3{grid-template-columns:1fr}table.ficha th{width:38%}}
+@media print{table.ficha th{background:#eee!important}.ficha-tecnica{margin:0}}
 
 /* Videos (YouTube, se cargan al hacer clic) */
 .videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:0 0 1em}
@@ -314,3 +348,14 @@ details .resp{padding:0 18px 16px;color:var(--gris-8)}
 .tarjeta-sector .img{aspect-ratio:3/2;background:#000;border-bottom:4px solid var(--amarillo)}
 .tarjeta-sector .img img{width:100%;height:100%;object-fit:cover;object-position:50% 40%}
 .tarjeta-sector:hover{transform:none}
+
+/* Carrusel del home */
+.carrusel{position:relative;background:#000}
+.carrusel .slide a,.carrusel .slide picture{display:block}
+.carrusel img{width:100%;height:auto;display:block;max-height:560px;object-fit:cover}
+.carrusel-ctl{position:absolute;right:14px;bottom:14px;display:flex;gap:8px}
+.carrusel-ctl button{width:44px;height:44px;border-radius:50%;border:2px solid #000;background:var(--amarillo);color:#000;font-size:1.3rem;font-weight:800;cursor:pointer}
+.carrusel-ctl button:hover{background:#fff}
+.banner-catalogo{display:block;border-radius:var(--radio);overflow:hidden;border-bottom:6px solid var(--amarillo)}
+.banner-catalogo img{width:100%;height:auto}
+.tarjeta .img:empty{display:none}
