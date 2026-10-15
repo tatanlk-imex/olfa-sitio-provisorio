@@ -74,4 +74,23 @@
     ctl.querySelector("[data-nov-prev]").addEventListener("click", function () { nov.scrollBy({ left: -paso(), behavior: "smooth" }); });
     ctl.querySelector("[data-nov-sig]").addEventListener("click", function () { nov.scrollBy({ left: paso(), behavior: "smooth" }); });
   }
+
+  // Inscripción al Club OLFA Prevención: abre el correo con los datos (no se envía nada solo)
+  var fc = document.getElementById("form-club");
+  if (fc) {
+    var C = window.OLFA_CONFIG || {}, cm = document.getElementById("club-mensaje");
+    fc.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (fc.elements.sitio_web && fc.elements.sitio_web.value) { return; }
+      if (!fc.checkValidity()) { fc.reportValidity(); return; }
+      var v = function (n) { return (fc.elements[n] && fc.elements[n].value) || "-"; };
+      var modo = fc.querySelector("input[name=modo]:checked");
+      var cuerpo = "Inscripción: " + (modo ? modo.value : "-") + "\n\nPREVENCIONISTA\nNombre: " + v("prev_nombre") + "\nCorreo: " + v("prev_correo") + "\nTeléfono: " + v("prev_tel") + "\nCargo o empresa: " + v("prev_cargo") +
+        "\n\nCOMPAÑÍA\nNombre: " + v("empresa") + "\nRubro: " + v("rubro") + "\nTrabajadores que usan cuchillos: " + v("trabajadores") + "\nCiudad o faena: " + v("ciudad") + "\nContacto en la compañía: " + v("contacto_empresa") +
+        "\n\nOtras compañías:\n" + v("otras") + "\n\nEnviado desde: " + window.location.href;
+      if (window.gtag) { window.gtag("event", "inscripcion_club"); }
+      window.location.href = "mailto:" + (C.CORREO_COTIZACIONES || "contacto@olfa.cl") + "?subject=" + encodeURIComponent("Inscripción Club OLFA Prevención: " + v("empresa")) + "&body=" + encodeURIComponent(cuerpo);
+      if (cm) { cm.className = "aviso aviso-ok"; cm.textContent = "Se abrió tu programa de correo con la inscripción lista. Solo debes presionar Enviar. Si no se abrió, escríbenos a " + (C.CORREO_COTIZACIONES || "contacto@olfa.cl") + "."; cm.hidden = false; cm.focus(); }
+    });
+  }
 })();
