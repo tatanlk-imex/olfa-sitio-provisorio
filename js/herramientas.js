@@ -93,4 +93,48 @@
       if (cm) { cm.className = "aviso aviso-ok"; cm.textContent = "Se abrió tu programa de correo con la inscripción lista. Solo debes presionar Enviar. Si no se abrió, escríbenos a " + (C.CORREO_COTIZACIONES || "contacto@olfa.cl") + "."; cm.hidden = false; cm.focus(); }
     });
   }
+
+  // Mi lista: comparar y cotizar varios productos (la lista vive solo en el navegador)
+  var CLAVE = "olfa_lista";
+  var leer = function () { try { var v = JSON.parse(window.localStorage.getItem(CLAVE) || "[]"); return Array.isArray(v) ? v : []; } catch (e) { return []; } };
+  var guardar = function (l) { try { window.localStorage.setItem(CLAVE, JSON.stringify(l)); } catch (e) { /* sin almacenamiento: no se guarda */ } };
+  var raizL = document.documentElement.getAttribute("data-raiz") || "./";
+  var pintar = function () {
+    var l = leer();
+    Array.prototype.forEach.call(document.querySelectorAll("[data-lista-n]"), function (n) { n.textContent = l.length; });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-lista]"), function (b) {
+      var en = l.indexOf(b.getAttribute("data-lista")) > -1; b.setAttribute("aria-pressed", en ? "true" : "false");
+      var largo = b.classList.contains("btn-sec"); b.textContent = en ? "✓ En mi lista" : (largo ? "+ Agregar a mi lista para comparar" : "+ Mi lista");
+    });
+  };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("[data-lista]") : null; if (!b) { return; }
+    var sku = b.getAttribute("data-lista"), l = leer(), i = l.indexOf(sku);
+    if (i > -1) { l.splice(i, 1); } else { l.push(sku); if (window.gtag) { window.gtag("event", "agregar_a_lista", { sku: sku }); } }
+    guardar(l); pintar(); if (window.pintarLista) { window.pintarLista(); }
+  });
+  pintar();
+  var app = document.getElementById("mi-lista-app"), dl = document.getElementById("datos-lista");
+  if (app && dl) {
+    var DL = {}; try { DL = JSON.parse(dl.textContent); } catch (e) { DL = {}; }
+    window.pintarLista = function () {
+      var l = leer().filter(function (s) { return DL[s]; });
+      if (!l.length) { app.innerHTML = "<p>Tu lista está vacía. Agrega productos con el botón «+ Mi lista» en el <a href=\"" + raizL + "productos/\">catálogo</a> o en la ficha de cada producto.</p>"; return; }
+      var filas = [["Línea", function (d) { return d.l; }], ["Medida de la hoja", function (d) { return d.a || "-"; }], ["Sistema", function (d) { return d.s || "-"; }], ["Mango", function (d) { return d.g || "-"; }],
+        ["Resistente a la acetona", function (d) { return d.c ? "Sí" : "No indicada"; }], ["Certificación NSF", function (d) { return d.f ? "Sí (según ficha)" : "No indicada"; }], ["Detectable por detectores de metales", function (d) { return d.m ? "Sí" : "No indicada"; }], ["Hojas de repuesto", function (d) { return d.h || "-"; }]];
+      var h = "<div class=\"tabla-envoltorio\"><table class=\"ficha comparar\"><thead><tr><th></th>" + l.map(function (s) { var d = DL[s]; return "<th scope=\"col\"><a href=\"" + d.u + "\"><img src=\"" + d.i + "\" alt=\"\" width=\"90\" height=\"90\"><br>" + esc(s) + "</a><br><button type=\"button\" class=\"btn btn-peq btn-sec\" data-quitar=\"" + esc(s) + "\">Quitar</button></th>"; }).join("") + "</tr></thead><tbody>";
+      filas.forEach(function (f) { h += "<tr><th scope=\"row\">" + esc(f[0]) + "</th>" + l.map(function (s) { return "<td>" + esc(f[1](DL[s])) + "</td>"; }).join("") + "</tr>"; });
+      h += "</tbody></table></div>";
+      var msg = "Quiero cotizar estos productos de mi lista: " + l.join(", ") + ".";
+      h += "<p style=\"margin-top:20px\"><a class=\"btn\" href=\"" + raizL + "cotizar/?interes=otro&producto=" + encodeURIComponent(l.join(", ")) + "&msg=" + encodeURIComponent(msg) + "\">Cotizar mi lista (" + l.length + ")</a> <button type=\"button\" class=\"btn btn-sec\" data-vaciar>Vaciar la lista</button></p>";
+      app.innerHTML = h;
+    };
+    app.addEventListener("click", function (e) {
+      var q = e.target.closest ? e.target.closest("[data-quitar]") : null, v = e.target.closest ? e.target.closest("[data-vaciar]") : null;
+      if (q) { guardar(leer().filter(function (s) { return s !== q.getAttribute("data-quitar"); })); }
+      if (v) { guardar([]); }
+      if (q || v) { pintar(); window.pintarLista(); }
+    });
+    window.pintarLista();
+  }
 })();
