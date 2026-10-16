@@ -412,3 +412,5 @@ h3{font-weight:700}
 
 .barra-provisorio{background:#B3261E;color:#fff;text-align:center;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.85rem;padding:7px 12px}
 @media print{.barra-provisorio{display:none}}
+
+@media (min-width:1101px){.cabecera .contenedor{max-width:1360px}.nav-principal a{white-space:nowrap;padding:10px 8px;font-size:.88rem}.nav-principal .cta-lista,.nav-principal .cta-nav-sec{margin-left:4px}}
