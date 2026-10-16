@@ -150,8 +150,8 @@ RedirectMatch 301 ^/producto/repuesto\-universal\-18\-mm\-antiadherente/?$ /prod
 RedirectMatch 301 ^/producto/3279/?$ /producto/lfb-5b-repuesto-universal-18-mm-antiadherente/
 RedirectMatch 301 ^/producto/repuesto\-universal\-18\-mm\-doble\-fragmentos/?$ /producto/lbd-10-repuesto-universal-18-mm-doble-fragmentos/
 RedirectMatch 301 ^/producto/3278/?$ /producto/lbd-10-repuesto-universal-18-mm-doble-fragmentos/
-RedirectMatch 301 ^/producto/repuesto\-universal\-18\-mm\-negro/?$ /producto/lbb-30b-repuesto-universal-hoja-negra-18-mm/
-RedirectMatch 301 ^/producto/3277/?$ /producto/lbb-30b-repuesto-universal-hoja-negra-18-mm/
+RedirectMatch 301 ^/producto/repuesto\-universal\-18\-mm\-negro/?$ /repuestos-y-hojas/
+RedirectMatch 301 ^/producto/3277/?$ /repuestos-y-hojas/
 RedirectMatch 301 ^/producto/repuesto\-universal\-18\-mm\-5/?$ /producto/lbb-10-repuesto-universal-18-mm/
 RedirectMatch 301 ^/producto/3276/?$ /producto/lbb-10-repuesto-universal-18-mm/
 RedirectMatch 301 ^/producto/repuesto\-universal\-18\-mm\-4/?$ /producto/lb-50-repuesto-universal-18-mm/

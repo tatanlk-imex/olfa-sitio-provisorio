@@ -371,3 +371,8 @@ table.comparar th,table.comparar td{min-width:150px;vertical-align:top}
 table.comparar thead th{text-align:center;background:#fff}
 table.comparar thead img{margin:0 auto 6px}
 .tarjeta .btn-lista{flex:1 1 100%;justify-content:center}
+
+.leyenda{font-size:.78rem;color:var(--gris-7);margin:6px 0 12px}
+.nota-precio{font-size:.78rem;color:var(--gris-7);text-align:right;margin:8px 0 0}
+.video-lite::before{background:linear-gradient(180deg,rgba(0,0,0,.15) 20%,rgba(0,0,0,.9) 100%)}
+.video-lite .video-tit{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.7)}

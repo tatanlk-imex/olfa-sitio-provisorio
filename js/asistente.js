@@ -14,7 +14,7 @@
   var RUBRO = { q: "¿En qué rubro trabaja tu empresa?", key: "Rubro", opts: [["Minería", "cant"], ["Logística, bodegas y centros de distribución", "cant"], ["Industria alimentaria", "cant"], ["Construcción e instalaciones", "cant"], ["Retail y comercio", "cant"], ["Manufactura e industria en general", "cant"], ["Otro", "cant"]] };
   var F = {
     inicio: { q: "¡Hola! Soy el asistente de OLFA Chile. Te hago unas preguntas rápidas para orientarte y que tu cotización llegue completa. ¿Qué necesitas?", key: "Necesidad", opts: [
-      ["Cuchillos de seguridad para mi empresa o faena", "seg_tarea", "seg"], ["Cuchillos industriales (18 y 25 mm)", "ind_uso", "ind"], ["Repuestos de hojas", "rep_tipo", "rep"],
+      ["Cuchillos de seguridad para mi empresa o lugar de trabajo", "seg_tarea", "seg"], ["Cuchillos industriales (18 y 25 mm)", "ind_uso", "ind"], ["Repuestos de hojas", "rep_tipo", "rep"],
       ["Raspadores", "ras_uso", "ras"], ["Cuchillos de uso general (9 mm) u oficina", "est_uso", "est"], ["Manualidades y corte de precisión", "pre_uso", "pre"],
       ["Quiero ser distribuidor o revendedor", "dist_canal", "dist"], ["Otra consulta", "rubro", "otro"]] },
     // Seguridad
@@ -56,7 +56,7 @@
       }[c.c] || ["nuestra línea de cuchillos de seguridad", "cuchillos-de-seguridad/"];
       return { txt: "Por lo que cuentas, te orientaría hacia " + s[0] + ".", ruta: s[1], etiqueta: "Ver cuchillos de seguridad" };
     }
-    if (t === "ind") { return { txt: "Para trabajo industrial tenemos cuchillos de 18 y 25 mm con mango antideslizante y seguro manual o automático.", ruta: "cuchillos-industriales/", etiqueta: "Ver cuchillos industriales" }; }
+    if (t === "ind") { return { txt: "Para trabajo industrial tenemos cuchillos de 18 y 25 mm con mango antideslizante y bloqueo de rueda o automático.", ruta: "cuchillos-industriales/", etiqueta: "Ver cuchillos industriales" }; }
     if (t === "rep") { return { txt: "Cada cuchillo indica qué repuestos usa, y cada repuesto, para qué cuchillos sirve.", ruta: "repuestos-y-hojas/", etiqueta: "Ver repuestos" }; }
     if (t === "ras") { return { txt: "Tenemos raspadores de 40 a 120 mm, con hojas de repuesto.", ruta: "raspadores/", etiqueta: "Ver raspadores" }; }
     if (t === "est") { return { txt: "Para uso general tenemos cuchillos estándar de 9 mm y de 12,5 mm.", ruta: "cuchillos-estandar/", etiqueta: "Ver cuchillos estándar" }; }
