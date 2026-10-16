@@ -409,3 +409,6 @@ h3{font-weight:700}
 .btn-ico:hover{background:var(--amarillo);color:#000}
 .ico-quim{vertical-align:-3px;margin-right:4px;color:#7a5c00}
 @media print{body.solo-ficha *{visibility:hidden}body.solo-ficha .ficha-tecnica,body.solo-ficha .ficha-tecnica *{visibility:visible}body.solo-ficha .ficha-tecnica{position:absolute;left:0;top:0;width:100%}}
+
+.barra-provisorio{background:#B3261E;color:#fff;text-align:center;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.85rem;padding:7px 12px}
+@media print{.barra-provisorio{display:none}}
