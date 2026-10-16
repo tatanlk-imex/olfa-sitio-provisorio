@@ -18,7 +18,7 @@
   if (C.WHATSAPP) {
     document.querySelectorAll("[data-whatsapp]").forEach(function (a) {
       var texto = a.getAttribute("data-whatsapp") || "Hola, quiero cotizar productos OLFA.";
-      a.href = "https://wa.me/" + C.WHATSAPP + "?text=" + encodeURIComponent(texto);
+      a.href = "https://wa.me/" + C.WHATSAPP + "?text=" + encodeURIComponent(texto) + "&lang=es";
       if (a.hasAttribute("data-wsp-num")) {
         var n = String(C.WHATSAPP);
         a.textContent = "+" + n.slice(0, 2) + " " + n.slice(2, 3) + " " + n.slice(3, 7) + " " + n.slice(7);
@@ -204,33 +204,53 @@
     aplicarL();
   }
 
-  // Formulario de cotización
+  // Formulario (cotizar, agendar visita, distribuidor): abre el correo con lo que la persona escribió; no se envía nada solo
   var form = document.getElementById("form-cotizacion");
   if (form) {
     var qs2 = new URLSearchParams(window.location.search);
-    var eq = qs2.get("producto");
-    var interes = qs2.get("interes");
+    var items = [];
+    (qs2.get("lista") || "").split("~").forEach(function (t) { var p = t.split("*"); if (p[0]) { items.push({ sku: p[0], n: Math.max(1, parseInt(p[1], 10) || 1) }); } });
+    var eq = qs2.get("producto"), interes = qs2.get("interes");
     if (eq && form.elements.producto) { form.elements.producto.value = eq; }
-    if (interes && form.elements.interes) { form.elements.interes.value = interes; }
+    var ie = form.elements.interes;
+    if (interes && ie && ie.type !== "hidden") { ie.value = interes; }
     var pm = qs2.get("msg");
     if (pm && form.elements.mensaje) { form.elements.mensaje.value = pm; }
+    var resumen = document.getElementById("resumen-lista");
+    if (items.length && resumen) {
+      resumen.innerHTML = "<h2>Tu cotización</h2><ul class=\"lista-resumen\">" + items.map(function (i) { return "<li><strong>" + i.sku + "</strong>: " + i.n + (i.n === 1 ? " unidad" : " unidades") + "</li>"; }).join("") + "</ul><p><a href=\"" + RAIZ + "mi-cotizacion/\">Modificar productos o cantidades</a></p>";
+      resumen.hidden = false;
+      if (form.elements.producto && form.elements.producto.closest) { var cp = form.elements.producto.closest(".campo"); if (cp) { cp.hidden = true; } }
+      var cc = document.getElementById("campo-cantidad"); if (cc) { cc.hidden = true; }
+    }
     var msg = document.getElementById("form-mensaje");
     function aviso(clase, texto) { msg.className = "aviso " + clase; msg.textContent = texto; msg.hidden = false; msg.focus(); }
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (form.elements.sitio_web && form.elements.sitio_web.value) { return; } // trampa para robots
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      var d = {};
-      Array.prototype.forEach.call(form.elements, function (el) { if (el.name && el.type !== "checkbox") { d[el.name] = el.value; } });
-      d.pagina = window.location.href;
-      evento("enviar_cotizacion", { interes: d.interes });
-      var pref = { visita: "Solicitud de visita o muestras OLFA: ", distribuidor: "Distribuidor OLFA: ", club: "Club OLFA Prevención: " }[d.interes] || "Cotización web OLFA: ";
-      var asunto = pref + (d.producto || d.interes || "consulta");
-      var cuerpo = "Nombre: " + d.nombre + "\nEmpresa: " + (d.empresa || "-") + "\nRubro: " + (d.rubro || "-") + "\nCorreo: " + d.correo + "\nTeléfono: " + (d.telefono || "-") +
-        "\nInterés: " + d.interes + "\nProducto: " + (d.producto || "-") + "\nTipo de cliente: " + (d.tipo || "-") + "\nCantidad: " + (d.cantidad || "-") + "\n\nMensaje:\n" + (d.mensaje || "-") + "\n\nEnviado desde: " + d.pagina;
+      var datos = {}, lineas = [];
+      Array.prototype.forEach.call(form.elements, function (el) {
+        if (!el.name || el.type === "checkbox" || el.name === "sitio_web" || el.name === "interes") { return; }
+        if (items.length && (el.name === "producto" || el.name === "cantidad")) { return; }
+        var val = (el.value || "").trim(); if (!val) { return; }
+        var lab = el.id ? form.querySelector("label[for=\"" + el.id + "\"]") : null;
+        var rot = lab ? lab.textContent.replace(/\s*\*\s*$/, "").trim() : el.name;
+        datos[el.name] = val; lineas.push(rot + ": " + val);
+      });
+      var itx = ie ? (ie.tagName === "SELECT" ? ie.options[ie.selectedIndex].text : (ie.getAttribute("data-texto") || ie.value)) : "";
+      if (items.length) { itx = "Cotización de productos"; datos.productos = items; }
+      datos.interes = itx; datos.pagina = window.location.origin + window.location.pathname;
+      evento("enviar_cotizacion", { interes: itx });
+      var variante = form.getAttribute("data-variante");
+      var cuerpo = (itx ? "Solicitud: " + itx + "\n\n" : "") + lineas.join("\n");
+      if (items.length) { cuerpo += "\n\nProductos y cantidades:\n" + items.map(function (i) { return "- " + i.sku + ": " + i.n + (i.n === 1 ? " unidad" : " unidades"); }).join("\n"); }
+      cuerpo += "\n\nEnviado desde el sitio web OLFA Chile (" + datos.pagina + ")";
+      var asunto = variante === "visita" ? "Solicitud de visita o reunión online OLFA" : variante === "distribuidor" ? "Quiero ser distribuidor OLFA: " + (datos.empresa || datos.nombre || "") :
+        "Cotización web OLFA: " + (items.length ? (items.length <= 3 ? items.map(function (i) { return i.sku; }).join(", ") : items.length + " productos") : (datos.producto || itx || "consulta"));
       if (C.FORM_ENDPOINT) {
-        fetch(C.FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(d) })
-          .then(function (r) { if (!r.ok) { throw new Error("fallo"); } form.reset(); aviso("aviso-ok", "¡Gracias! Recibimos tu solicitud. Te responderemos dentro del horario de atención (lunes a viernes)."); })
+        fetch(C.FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(datos) })
+          .then(function (r) { if (!r.ok) { throw new Error("fallo"); } form.reset(); aviso("aviso-ok", "¡Gracias! Recibimos tu solicitud. Te responderemos dentro del horario de atención."); })
           .catch(function () { aviso("aviso-error", "No pudimos enviar el formulario. Escríbenos a " + C.CORREO_COTIZACIONES + " o llama al " + C.TELEFONO + "."); });
       } else {
         window.location.href = "mailto:" + C.CORREO_COTIZACIONES + "?subject=" + encodeURIComponent(asunto) + "&body=" + encodeURIComponent(cuerpo);

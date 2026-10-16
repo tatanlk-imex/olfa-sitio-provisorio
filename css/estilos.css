@@ -376,3 +376,36 @@ table.comparar thead img{margin:0 auto 6px}
 .nota-precio{font-size:.78rem;color:var(--gris-7);text-align:right;margin:8px 0 0}
 .video-lite::before{background:linear-gradient(180deg,rgba(0,0,0,.15) 20%,rgba(0,0,0,.9) 100%)}
 .video-lite .video-tit{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.7)}
+
+/* ---- segunda ronda de comentarios (Carolina Cerón) */
+h2{font-size:clamp(1.2rem,2.2vw,1.55rem);font-weight:700;letter-spacing:0}
+.encabezado-seccion h2,.seccion-amarilla h2,.seccion-oscura .encabezado-seccion h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;letter-spacing:-.01em}
+h3{font-weight:700}
+.barra-aviso .contenedor{justify-content:flex-start}
+.aviso-guia{display:inline-block;background:#000;color:var(--amarillo)!important;text-decoration:none!important;padding:5px 16px;border-radius:999px;font-weight:800}
+.aviso-guia:hover{background:#2a2a2a}
+.nav-principal .cta-lista{display:flex;gap:7px;align-items:center;border:2px solid #fff;margin-left:6px}
+.nav-principal .cta-lista.con-items{background:#fff;color:#000}
+.nav-principal .cta-lista:hover{background:var(--amarillo);color:#000;border-color:var(--amarillo)}
+.toast-lista{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;background:#111;color:#fff;border-left:6px solid var(--amarillo);padding:12px 18px;border-radius:10px;z-index:400;box-shadow:0 8px 30px rgba(0,0,0,.4);display:flex;gap:16px;align-items:center;max-width:92vw}
+.toast-lista.visible{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast-lista a{color:var(--amarillo);font-weight:700;white-space:nowrap}
+.cantidad{display:inline-flex;align-items:center;border:2px solid #000;border-radius:999px;overflow:hidden;margin:10px 0 8px;background:#fff}
+.cantidad button{width:34px;height:34px;border:0;background:var(--amarillo);font-size:1.2rem;font-weight:800;cursor:pointer;color:#000}
+.cantidad button:hover{background:#000;color:var(--amarillo)}
+.cantidad input{width:58px;border:0;text-align:center;font:inherit;font-weight:700;padding:4px;-moz-appearance:textfield}
+.cantidad input::-webkit-outer-spin-button,.cantidad input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.lista-resumen{list-style:none;padding:0;margin:0 0 10px}
+.lista-resumen li{padding:6px 0;border-bottom:1px solid var(--gris-2)}
+.resumen-lista{margin-bottom:22px}
+.xd{font-style:italic;font-weight:900;letter-spacing:.03em;white-space:nowrap}
+.xd b{background:var(--amarillo);color:#000;padding:0 .14em;margin-right:.05em}
+.fotos-xd{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.foto-xd{margin:0;border:1px solid var(--gris-2);border-radius:var(--radio);background:#fff;padding:10px;text-align:center}
+.foto-xd figcaption{font-weight:700;font-size:.9rem;margin-top:6px}
+.acciones-ficha{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.grupo-iconos{display:inline-flex;gap:8px}
+.btn-ico{display:inline-flex;align-items:center;gap:6px;border:2px solid #000;background:#fff;color:#000;border-radius:999px;padding:6px 14px;font-weight:700;font-size:.9rem;text-decoration:none;cursor:pointer;font-family:inherit;line-height:1.2}
+.btn-ico:hover{background:var(--amarillo);color:#000}
+.ico-quim{vertical-align:-3px;margin-right:4px;color:#7a5c00}
+@media print{body.solo-ficha *{visibility:hidden}body.solo-ficha .ficha-tecnica,body.solo-ficha .ficha-tecnica *{visibility:visible}body.solo-ficha .ficha-tecnica{position:absolute;left:0;top:0;width:100%}}
